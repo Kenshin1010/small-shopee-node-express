@@ -9,5 +9,5 @@ app.get("/", (req, res) => {
 const PORT = 3000;
 
 app.listen(PORT, () => {
-  console.log(`Running on Port ${PORT}`);
+  console.log(`Running at http://localhost:${PORT}`);
 });
