@@ -1,21 +1,8 @@
-import express from "express";
 import mongoose from "mongoose";
-import { mongoDBURL, PORT } from "./config";
+import { mongoDBURL, PORT } from "./config/db/config";
+import { createApp } from "./createApp";
 
-const app = express();
-app.use(express.json());
-
-console.log("App is starting...");
-
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-
-app.get("/", (req, res) => {
-  console.log(req);
-  return res.status(234).send("Store Books API");
-});
+const app = createApp();
 
 mongoose
   .connect(mongoDBURL)
@@ -25,8 +12,12 @@ mongoose
       console.log(`App is listening to port: ${PORT}`);
     });
   })
-  .catch((error) => {
-    console.log(error);
+  .catch((error: unknown) => {
+    if (error instanceof Error) {
+      console.log("Database connection error:", error.message);
+    } else {
+      console.log("Unknown error:", error);
+    }
   });
 
-module.exports = app;
+export default app;
