@@ -15,10 +15,6 @@ async function addUser(
 
   try {
     // checking avatar/files
-    console.log("addUser", req.files);
-    console.log(Array.isArray(req.files));
-    console.log(88888);
-
     if (req.files && Array.isArray(req.files) && req.files.length > 0) {
       // use cloudinary.uploader.upload() to upload image in cloudinary
       const result = await cloudinary.uploader.upload(req.files[0].path, {
@@ -27,8 +23,7 @@ async function addUser(
         crop: "thumb", // create thumbnail image
         gravity: "face", // focusing on face
       });
-      // console.log(result);
-      console.log(9999999999);
+
       // creating new user object with image
       newUser = new User({
         ...req.body,
