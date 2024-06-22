@@ -3,7 +3,7 @@ import { CreateBookDto } from "../dtos/CreateBook.dto";
 import { CreateBookQueryParams } from "../../types/query-params";
 import { IBook } from "../../types/response";
 import { Book } from "../models/bookModel";
-import { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
 interface ErrorResponse {
   message: string;
@@ -32,13 +32,13 @@ export async function getBooks(
 }
 
 export async function getBookById(
-  request: Request<{ id: string }, {}, {}, CreateBookQueryParams>,
+  request: Request<{ _id: string }, {}, {}, CreateBookQueryParams>,
   response: Response<IBook | ErrorResponse>
 ) {
   try {
-    const { id } = request.params;
+    const { _id } = request.params;
 
-    const book = await Book.findById(id);
+    const book = await Book.findById(_id);
 
     if (!book) {
       return response.status(404).send({ message: "Book not found" });
@@ -83,6 +83,45 @@ export async function createBook(
 
     return response.status(201).send(book);
   } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+      response.status(500).send({ message: error.message });
+    }
+  }
+}
+
+export async function searchBooks(
+  request: Request<SearchParams>,
+  response: Response<{ count: number; books: IBook[] } | ErrorResponse>
+) {
+  try {
+    const { keyword } = request.params;
+
+    const searchCriteria: FilterQuery<IBook> = {};
+
+    if (keyword) {
+      const regex = new RegExp(String(keyword), "i");
+      searchCriteria.$or = [
+        { title: { $regex: regex } },
+        { subtitle: { $regex: regex } },
+        { price: { $regex: regex } },
+        { image: { $regex: regex } },
+        { url: { $regex: regex } },
+        { isbn13: isNaN(Number(keyword)) ? undefined : Number(keyword) },
+      ].filter(Boolean);
+
+      if (mongoose.Types.ObjectId.isValid(keyword)) {
+        searchCriteria.$or.push({ _id: new mongoose.Types.ObjectId(keyword) });
+      }
+    }
+
+    const books = await Book.find(searchCriteria);
+
+    return response.status(200).json({
+      count: books.length,
+      books: books,
+    });
+  } catch (error: unknown) {
     if (error instanceof Error) {
       console.log(error.message);
       response.status(500).send({ message: error.message });

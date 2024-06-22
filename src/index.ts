@@ -4,10 +4,13 @@ import { createApp } from "./createApp";
 
 const app = createApp();
 
+// mongoose connection
 mongoose
   .connect(mongoDBURL)
   .then(() => {
     console.log("App connected to database");
+
+    // listening server
     app.listen(PORT, () => {
       console.log(`App is listening to port: ${PORT}`);
     });

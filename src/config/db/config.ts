@@ -1,4 +1,7 @@
-export const PORT = 5555;
+import dotenv from "dotenv";
 
+// Load environment variables from .env file
+dotenv.config();
+export const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5555;
 export const mongoDBURL =
-  "mongodb+srv://root:1234@booksstoreapi.5kligic.mongodb.net/sample_mflix?retryWrites=true&w=majority&appName=BooksStoreAPI";
+  process.env.MONGODB_URL || "mongodb://localhost:27017/default";
