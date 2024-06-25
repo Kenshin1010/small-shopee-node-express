@@ -7,7 +7,7 @@
     "build": "tsc --build && yarn copy-public",
     "start": "node ./dist/index.js",
     "start:dev": "nodemon ./src/index.ts",
-    "copy-public": "copyfiles -u 1 src/public/**/* dist/public"
+    "copy-public": "copyfiles -u 1 src/public/**/* dist"
   },
   "keywords": [],
   "author": "",
