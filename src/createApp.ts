@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import path from "path";
 import bookRouter from "./routes/booksRoute";
 import uploadRouter from "./routes/uploadRouter";
 import cors from "cors";
@@ -20,6 +21,10 @@ export function createApp() {
   app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
     next();
+  });
+
+  app.get("/favicon.ico", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "favicon.ico"));
   });
 
   app.get("/", (req, res) => {
