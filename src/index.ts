@@ -4,9 +4,13 @@ import { createApp } from "./createApp";
 
 const app = createApp();
 
+const options = {
+  serverSelectionTimeoutMS: 5000,
+};
+
 // mongoose connection
 mongoose
-  .connect(mongoDBURL)
+  .connect(mongoDBURL, options)
   .then(() => {
     console.log("App connected to database");
 
