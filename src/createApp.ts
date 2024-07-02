@@ -1,7 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
 import path from "path";
 import bookRouter from "./routes/booksRoute";
-import uploadRouter from "./routes/uploadRouter";
+import uploadRouter from "./routes/uploadRoute";
+import cartItemRouter from "./routes/cartItemsRoute";
+import purchasedHistoryItemRouter from "./routes/purchasedHistoryItemsRoute";
 import cors from "cors";
 import bodyParser from "body-parser";
 
@@ -35,7 +37,9 @@ export function createApp() {
 
   // router setup
   app.use("/", bookRouter);
+  app.use("/purchased", purchasedHistoryItemRouter);
   app.use("/upload", uploadRouter);
+  app.use("/cart", cartItemRouter);
 
   return app;
 }
